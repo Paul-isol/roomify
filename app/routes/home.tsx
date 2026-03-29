@@ -13,11 +13,16 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Home() {
   const navigate = useNavigate();
-  const handleUploadComplete = async (base64Image: string)=>{
+  const handleUploadComplete = async (base64Image: string) => {
     const newId = Date.now().toString();
-    navigate(`visualizer/${newId}`);
+    try {
+      sessionStorage.setItem(`roomify_img_${newId}`, base64Image);
+    } catch (e) {
+      console.warn("Failed to store image in sessionStorage", e);
+    }
+    navigate(`visualizer/${newId}`, { state: { image: base64Image } });
     return true;
-  }
+  };
   return (
     <div className="home">
       <Navbar />
